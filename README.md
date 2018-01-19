@@ -1,6 +1,6 @@
 # Building
 
-cd docker ; docker build --pull --rm -t postfixadmin-image .
+`docker build --pull --rm -t postfixadmin-image .`
 
 # Running
 
