@@ -1,6 +1,22 @@
 # Building
 
-`docker build --pull --rm -t postfixadmin-image .`
+`docker build --pull --rm -t postfixadmin-image variant`
+
+## Image Variants
+
+The following variant are currently provided:
+
+### apache
+
+This starts an Apache webserver with PHP, so you can use `postfixadmin` out of the box.
+
+### fpm-alpine
+
+This image has a very small footprint. It is based on Alpine Linux and starts only a PHP FPM process. Use this variant if you already have a seperate webserver. If you need more tools, that are not available on Alpine Linux, use the `fpm` image instead.
+
+### fpm
+
+This image starts only a PHP FPM container. Use this variant if you already have a seperate webserver.
 
 # Running
 
@@ -28,7 +44,7 @@ docker run -e POSTFIXADMIN_DB_TYPE=mysqli \
 Note: An sqlite database is used as a fallback if you do not have a config.local.php and do not specify the above variables.
 
 
-## Existing config.local.php 
+## Existing config.local.php
 
 ```bash
 docker run --name postfixadmin -p 8080:80 postfixadmin-image
