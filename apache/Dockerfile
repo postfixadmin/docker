@@ -5,12 +5,38 @@ ARG POSTFIXADMIN_VERSION=3.1
 ARG POSTFIXADMIN_SHA512=3bda4e9d4a7308d22edca30d181af76b7153e57b19bda878e32f5eeeb49127f46581c966706bcca13cd31740cadacc584e15830aa157b4655e60d44d66f45ddd
 
 # Install required PHP extensions
-RUN buildDeps='libpq-dev libsqlite3-dev' \
-	&& apt-get update && apt-get install -y --no-install-recommends $buildDeps \
-	&& docker-php-ext-install mysqli pdo pdo_mysql pdo_pgsql pdo_sqlite pgsql \
-	&& apt-mark manual libpq5 \
-	&& apt-get purge -y --auto-remove $buildDeps \
-	&& apt-get clean && rm -rf /var/lib/apt/lists/*
+RUN set -ex; \
+	\
+	savedAptMark="$(apt-mark showmanual)"; \
+	\
+	apt-get update; \
+	apt-get install -y --no-install-recommends \
+	libpq-dev \
+	libsqlite3-dev \
+	; \
+	\
+	docker-php-ext-install \
+		mysqli \
+		pdo \
+		pdo_mysql \
+		pdo_pgsql \
+		pdo_sqlite \
+		pgsql \
+	; \
+	\
+# reset apt-mark's "manual" list so that "purge --auto-remove" will remove all build dependencies
+	apt-mark auto '.*' > /dev/null; \
+	apt-mark manual $savedAptMark; \
+		ldd "$(php -r 'echo ini_get("extension_dir");')"/*.so \
+		| awk '/=>/ { print $3 }' \
+		| sort -u \
+		| xargs -r dpkg-query -S \
+		| cut -d: -f1 \
+		| sort -u \
+		| xargs -rt apt-mark manual; \
+		\
+	apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false; \
+	rm -rf /var/lib/apt/lists/*
 
 VOLUME /var/www/html
 
