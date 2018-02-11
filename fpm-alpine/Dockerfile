@@ -4,6 +4,10 @@ LABEL maintainer="David Goodwin <david@codepoets.co.uk> (@DavidGoodwin)"
 ARG POSTFIXADMIN_VERSION=3.1
 ARG POSTFIXADMIN_SHA512=3bda4e9d4a7308d22edca30d181af76b7153e57b19bda878e32f5eeeb49127f46581c966706bcca13cd31740cadacc584e15830aa157b4655e60d44d66f45ddd
 
+# docker-entrypoint.sh dependencies
+RUN apk add --no-cache \
+		bash
+
 # Install required PHP extensions
 RUN set -ex; \
 	\
