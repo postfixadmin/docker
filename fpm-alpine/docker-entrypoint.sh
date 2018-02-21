@@ -5,6 +5,7 @@ POSTFIXADMIN_DB_TYPE=${POSTFIXADMIN_DB_TYPE:=sqlite}
 POSTFIXADMIN_DB_HOST=${POSTFIXADMIN_DB_HOST:=""}
 POSTFIXADMIN_DB_USER=${POSTFIXADMIN_DB_USER:=""}
 POSTFIXADMIN_DB_PASSWORD=${POSTFIXADMIN_DB_PASSWORD:=""}
+POSTFIXADMIN_SETUP_PASSWORD=${POSTFIXADMIN_SETUP_PASSWORD:=""}
 
 if [[ "$1" == apache2* ]] || [ "$1" == php-fpm ]; then
 	if ! [ -e index.php -a -e scripts/postfixadmin-cli.php ]; then
@@ -40,11 +41,14 @@ if [[ "$1" == apache2* ]] || [ "$1" == php-fpm ]; then
 		timeout 15 bash -c "until echo > /dev/tcp/${POSTFIXADMIN_DB_HOST}/${POSTFIXADMIN_DB_PORT}; do sleep 0.5; done"
 	fi
 
-	if [ "$POSTFIXADMIN_DB_TYPE" = 'sqlite' ]; then
-		: "${POSTFIXADMIN_DB_NAME:=/var/local/postfixadmin.db}"
+	if [ "${POSTFIXADMIN_DB_TYPE}" = 'sqlite' ]; then
+		: "${POSTFIXADMIN_DB_NAME:=/var/tmp/postfixadmin.db}"
 
-		if [ ! -e "$POSTFIXADMIN_DB_NAME" ]; then
+		if [ ! -f "${POSTFIXADMIN_DB_NAME}" ]; then
+			echo "Creating sqlite db"
 			touch $POSTFIXADMIN_DB_NAME
+			chown www-data:www-data $POSTFIXADMIN_DB_NAME
+			chmod 0700 $POSTFIXADMIN_DB_NAME
 		fi
 	fi
 
