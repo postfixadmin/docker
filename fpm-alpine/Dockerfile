@@ -17,7 +17,6 @@ RUN set -ex; \
 	; \
 	docker-php-ext-install \
 		mysqli \
-		pdo \
 		pdo_mysql \
 		pdo_pgsql \
 		pdo_sqlite \
