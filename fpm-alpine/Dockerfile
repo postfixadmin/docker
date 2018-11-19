@@ -1,4 +1,4 @@
-FROM php:7.0-fpm-alpine
+FROM php:7.2-fpm-alpine
 LABEL maintainer="David Goodwin <david@codepoets.co.uk> (@DavidGoodwin)"
 
 ARG POSTFIXADMIN_VERSION=3.2

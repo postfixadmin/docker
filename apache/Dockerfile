@@ -1,4 +1,4 @@
-FROM php:7.0-apache
+FROM php:7.2-apache
 LABEL maintainer="David Goodwin <david@codepoets.co.uk> (@DavidGoodwin)"
 
 ARG POSTFIXADMIN_VERSION=3.2
