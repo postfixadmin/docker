@@ -18,11 +18,13 @@ for variant in apache fpm fpm-alpine; do
 	template="Dockerfile-${base[$variant]}.template"
 	mkdir -p "$dir"
 	cp -a "docker-entrypoint.sh" "$dir/docker-entrypoint.sh"
-	cp $template "$variant/Dockerfile"
-	sed -ri -e '
-		s/%%VARIANT%%/'"$variant"'/;
-		s/%%CMD%%/'"${cmd[$variant]}"'/;
-	' "$dir/Dockerfile"
+	sed -r \
+		-e 's!%%VARIANT%%!'"$variant"'!g' \
+		-e 's!%%CMD%%!'"${cmd[$variant]}"'!g' \
+		"Dockerfile-${base[$variant]}.template" > "$dir/Dockerfile"
+	if [ $variant != "apache" ]; then
+		sed -i -e '/APACHE_DOCUMENT_ROOT/d' "$dir/Dockerfile"
+	fi
 	travisEnv+='\n  - VARIANT='"$dir"
 done
 
