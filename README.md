@@ -58,10 +58,11 @@ docker run --name postfixadmin -p 8080:80 postfixadmin-image
 
 # Docker Compose
 
-Try something like the below; changing the usernames/passwords as required.
+Try something like the below in a **docker-compose.yml** file; changing the usernames/passwords as required.
 
+Then run : `docker-compose up`
 
-```
+```yaml
 version: '3'
 
 services:
