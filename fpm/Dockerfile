@@ -42,11 +42,11 @@ ENV POSTFIXADMIN_SHA512 $POSTFIXADMIN_SHA512
 
 
 RUN set -eu; \
-	curl -o postfixadmin.tar.gz -SL "https://github.com/postfixadmin/postfixadmin/archive/postfixadmin-${POSTFIXADMIN_VERSION}.tar.gz"; \
+	curl -fL -o postfixadmin.tar.gz -SL "https://github.com/postfixadmin/postfixadmin/archive/postfixadmin-${POSTFIXADMIN_VERSION}.tar.gz"; \
 	echo "$POSTFIXADMIN_SHA512 *postfixadmin.tar.gz" | sha512sum -c -; \
 	# upstream tarball include ./postfixadmin-postfixadmin-${POSTFIXADMIN_VERSION}/
-	tar -xzf postfixadmin.tar.gz -C /usr/src/; \
-	mv /usr/src/postfixadmin-postfixadmin-${POSTFIXADMIN_VERSION} /usr/src/postfixadmin; \
+	mkdir /usr/src/postfixadmin; \
+	tar -xf postfixadmin.tar.gz -C /usr/src/postfixadmin --strip-components=1; \
 	rm postfixadmin.tar.gz; \
 	# Does not exist in tarball but is required
 	mkdir -p /usr/src/postfixadmin/templates_c; \
