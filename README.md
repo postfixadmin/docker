@@ -1,6 +1,7 @@
 # Building
 
-`docker build --pull --rm -t postfixadmin-image variant`
+ * Clone this repo ( `git clone https://github.com/postfixadmin/docker.git docker` ) and then run :
+ * `docker build --pull --rm -t postfixadmin-image variant` from within the created directory.
 
 ## Image Variants
 
@@ -12,11 +13,15 @@ This starts an Apache webserver with PHP, so you can use `postfixadmin` out of t
 
 ### fpm-alpine
 
-This image has a very small footprint. It is based on Alpine Linux and starts only a PHP FPM process. Use this variant if you already have a seperate webserver. If you need more tools, that are not available on Alpine Linux, use the `fpm` image instead.
+This image has a very small footprint. It is based on Alpine Linux and starts only a PHP FPM process. Use this variant if you already have a seperate webserver. 
+
+If you need more tools, that are not available on Alpine Linux, use the `fpm` image instead.
 
 ### fpm
 
-This image starts only a PHP FPM container. Use this variant if you already have a seperate webserver.
+This image is based on Debian and starts only a PHP FPM container. 
+
+Use this variant if you already have a seperate webserver.
 
 # Running
 
