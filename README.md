@@ -27,19 +27,31 @@ Use this variant if you already have a seperate webserver.
 
 # Running
 
+Some knowledge of Postixadmin is assumed. 
+
+Advanced users will probably want to specify a custom configuration (config.local.php file).
+
+If you're just trying out the software, there's probably no need for a config.local.php file.
+
+
+
 ## No config.local.php / no existing setup
 
-If you do not have a config.local.php, then we fall back to look for environment variables to generate one.
+You have two options :
 
-POSTFIXADMIN\_DB\_TYPE can be one of :
+ * Use a default sqlite database, or
+ * Use an external database (MySQL, PgSQL etc).
+ 
+You can configure this through the following environment variables when running the docker container.
 
- * mysqli
- * pgsql
- * sqlite
+ * POSTFIXADMIN\_DB_\TYPE=...  - sqlite, mysqli, pgsql
+ * POSTFIXADMIN\_DB_\NAME=.... - database name or path to database file (sqlite)
+ * POSTFIXADMIN\_DB_\USER=...  - mysqli/pgsql only (db server user name)
+ * POSTFIXADMIN\_DB_\PASSWORD=... - mysqli/pgsql only (db server user password)
+ 
+Note: An SQLite database is probably not recommended for production use, but is a quick and easy way to try out the software without dependencies. 
 
-If you're using sqlite, you can omit the POSTFIXADMIN\_DB\_HOST, ...USER, ...PASSWORD variables. POSTFIXADMin_DB_NAME needs to point to an appropriate file path, which is created if it does not already exist.
-
-You'll probably want to use a volume so you can persist any SQLite database beyond a single container's life. 
+### Example docker run
 
 ```bash
 docker run -e POSTFIXADMIN_DB_TYPE=mysqli \
@@ -52,12 +64,19 @@ docker run -e POSTFIXADMIN_DB_TYPE=mysqli \
         postfixadmin-image
 ```
 
-Note: An SQLite database is not recommend but used as a fallback if you do not have a config.local.php or do not specify the above variables.
 
-## Existing config.local.php
+## Existing setup / with config.local.php
+
+Postfixadmin's default configuration is stored in a config.inc.php file (see https://github.com/postfixadmin/postfixadmin/blob/master/config.inc.php ). 
+
+To customise, copy this file, remove everything you don't want to override, and call it **config.local.php**.
+
 
 ```bash
-docker run --name postfixadmin -v /local/path/to/config.local.php:/var/www/html/config.local.php -p 8080:80 postfixadmin-image
+docker run -v /local/path/to/config.local.php:/var/www/html/config.local.php \
+           --name postfixadmin \
+           -p 8080:80 \
+           postfixadmin-image
 ```
 
 # Docker Compose
