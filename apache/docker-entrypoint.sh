@@ -69,9 +69,9 @@ if [[ "$1" == apache2* ]] || [ "$1" == php-fpm ]; then
 		echo "Postfixadmin related environment variables have been ignored."
 	fi
 
-	if [ -f upgrade.php ]; then
+	if [ -f public/upgrade.php ]; then
 		echo " ** Running database / environment upgrade.php "
-		php upgrade.php
+		php public/upgrade.php
 	fi
 fi
 
