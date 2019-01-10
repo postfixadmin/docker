@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/postfixadmin/docker.svg?branch=master)](https://travis-ci.org/postfixadmin/docker)
+
 # Building
 
  * Clone this repo ( `git clone https://github.com/postfixadmin/docker.git docker` ) and then run :
