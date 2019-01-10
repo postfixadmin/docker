@@ -35,6 +35,10 @@ POSTFIXADMIN\_DB\_TYPE can be one of :
  * pgsql
  * sqlite
 
+If you're using sqlite, you can omit the POSTFIXADMIN\_DB\_HOST, ...USER, ...PASSWORD variables. POSTFIXADMin_DB_NAME needs to point to an appropriate file path, which is created if it does not already exist.
+
+You'll probably want to use a volume so you can persist any SQLite database beyond a single container's life. 
+
 ```bash
 docker run -e POSTFIXADMIN_DB_TYPE=mysqli \
            -e POSTFIXADMIN_DB_HOST=whatever \
@@ -47,13 +51,11 @@ docker run -e POSTFIXADMIN_DB_TYPE=mysqli \
 ```
 
 Note: An SQLite database is not recommend but used as a fallback if you do not have a config.local.php or do not specify the above variables.
-Do not forget to add a volume for the SQLite path.
-
 
 ## Existing config.local.php
 
 ```bash
-docker run --name postfixadmin -p 8080:80 postfixadmin-image
+docker run --name postfixadmin -v /local/path/to/config.local.php:/var/www/html/config.local.php -p 8080:80 postfixadmin-image
 ```
 
 # Docker Compose
