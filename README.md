@@ -46,7 +46,7 @@ docker run -e POSTFIXADMIN_DB_TYPE=mysqli \
         postfixadmin-image
 ```
 
-Note: An SQLite database is not recommend but used as a fallback if you do not have a config.local.php and do not specify the above variables.
+Note: An SQLite database is not recommend but used as a fallback if you do not have a config.local.php or do not specify the above variables.
 Do not forget to add a volume for the SQLite path.
 
 
