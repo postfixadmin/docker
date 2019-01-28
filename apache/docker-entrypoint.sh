@@ -58,6 +58,7 @@ if [[ "$1" == apache2* ]] || [ "$1" == php-fpm ]; then
 		echo "<?php
 		\$CONF['database_type'] = '${POSTFIXADMIN_DB_TYPE}';
 		\$CONF['database_host'] = '${POSTFIXADMIN_DB_HOST}';
+		\$CONF['database_port'] = '${POSTFIXADMIN_DB_PORT}';
 		\$CONF['database_user'] = '${POSTFIXADMIN_DB_USER}';
 		\$CONF['database_password'] = '${POSTFIXADMIN_DB_PASSWORD}';
 		\$CONF['database_name'] = '${POSTFIXADMIN_DB_NAME}';
