@@ -42,7 +42,7 @@ ENV POSTFIXADMIN_SHA512 $POSTFIXADMIN_SHA512
 
 
 RUN set -eu; \
-	curl -fL -o postfixadmin.tar.gz -SL "https://github.com/postfixadmin/postfixadmin/archive/postfixadmin-${POSTFIXADMIN_VERSION}.tar.gz"; \
+	curl -fsSL -o postfixadmin.tar.gz "https://github.com/postfixadmin/postfixadmin/archive/postfixadmin-${POSTFIXADMIN_VERSION}.tar.gz"; \
 	echo "$POSTFIXADMIN_SHA512 *postfixadmin.tar.gz" | sha512sum -c -; \
 	# upstream tarball include ./postfixadmin-postfixadmin-${POSTFIXADMIN_VERSION}/
 	mkdir /usr/src/postfixadmin; \
