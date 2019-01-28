@@ -1,5 +1,5 @@
 #!/bin/bash
-set -ex
+set -eo pipefail
 
 POSTFIXADMIN_DB_TYPE=${POSTFIXADMIN_DB_TYPE:=sqlite}
 POSTFIXADMIN_DB_HOST=${POSTFIXADMIN_DB_HOST:=""}
