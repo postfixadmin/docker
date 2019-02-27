@@ -3,7 +3,7 @@
 # Building
 
  * Clone this repo ( `git clone https://github.com/postfixadmin/docker.git docker` ) and then run :
- * `docker build --pull --rm -t postfixadmin-image variant` from within the created directory.
+ * `docker build --pull --rm -t postfixadmin-image <VARIANT>` from within the created directory (where <VARIANT> is replaced by apache, fpm or fpm-alpine)
 
 ## Image Variants
 
