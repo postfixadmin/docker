@@ -48,7 +48,8 @@ You can configure this through the following environment variables when running 
  * POSTFIXADMIN\_DB\_NAME=.... - database name or path to database file (sqlite)
  * POSTFIXADMIN\_DB\_USER=...  - mysqli/pgsql only (db server user name)
  * POSTFIXADMIN\_DB\_PASSWORD=... - mysqli/pgsql only (db server user password)
- 
+ * POSTFIXADMIN\_SETUP\_PASSWORD=... - for setup.php and super-admin creation.
+
 Note: An SQLite database is probably not recommended for production use, but is a quick and easy way to try out the software without dependencies. 
 
 ### Example docker run
@@ -59,6 +60,7 @@ docker run -e POSTFIXADMIN_DB_TYPE=mysqli \
            -e POSTFIXADMIN_DB_USER=user \
            -e POSTFIXADMIN_DB_PASSWORD=topsecret \
            -e POSTFIXADMIN_DB_NAME=postfixadmin \
+           -e POSTFIXADMIN_SETUP_PASSWORD=topsecret \
            --name postfixadmin \
            -p 8080:80 \
         postfixadmin-image
@@ -111,5 +113,7 @@ services:
        POSTFIXADMIN_DB_USER: postfixadmin
        POSTFIXADMIN_DB_NAME: postfixadmin
        POSTFIXADMIN_DB_PASSWORD: postfixadminPassword
+       POSTFIXADMIN_SETUP_PASSWORD: topsecret
+
 ```
 
