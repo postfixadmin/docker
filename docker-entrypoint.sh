@@ -10,13 +10,13 @@ POSTFIXADMIN_DB_PASSWORD=${POSTFIXADMIN_DB_PASSWORD:=""}
 DEFAULT_SETUP_PASSWORD="791eb4ead7fd996c01bed30707ae27dd:b7910d09773104bf84c4f4951205d2198c7cfc4f"
 POSTFIXADMIN_SETUP_PASSWORD=${POSTFIXADMIN_SETUP_PASSWORD:=$DEFAULT_SETUP_PASSWORD}
 
-if [ "${POSTFIXADMIN_SETUP_PASSWORD}" = "${DEFAULT_SETUP_PASSWORD}" ]; then
-    echo
-    echo "Using default setup.php password of : topsecret99"
-    echo
-fi
 
 if [[ "$1" == apache2* ]] || [ "$1" == php-fpm ]; then
+
+	if [ "${POSTFIXADMIN_SETUP_PASSWORD}" = "${DEFAULT_SETUP_PASSWORD}" ]; then
+		echo >&2 "WARNING: Using default setup.php password of : topsecret99"
+	fi
+
 	if ! [ -e index.php -a -e scripts/postfixadmin-cli.php ]; then
 		echo >&2 "Postfixadmin not found in $PWD - copying now..."
 		if [ "$(ls -A)" ]; then
