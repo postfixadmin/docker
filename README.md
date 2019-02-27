@@ -34,7 +34,6 @@ Advanced users will probably want to specify a custom configuration (config.loca
 If you're just trying out the software, there's probably no need for a config.local.php file.
 
 
-
 ## No config.local.php / no existing setup
 
 You have two options :
@@ -48,7 +47,7 @@ You can configure this through the following environment variables when running 
  * POSTFIXADMIN\_DB\_NAME=.... - database name or path to database file (sqlite)
  * POSTFIXADMIN\_DB\_USER=...  - mysqli/pgsql only (db server user name)
  * POSTFIXADMIN\_DB\_PASSWORD=... - mysqli/pgsql only (db server user password)
- * POSTFIXADMIN\_SETUP\_PASSWORD=... - for setup.php and super-admin creation.
+ * POSTFIXADMIN\_SETUP\_PASSWORD=... - generated from setup.php, default is topsecret99
 
 Note: An SQLite database is probably not recommended for production use, but is a quick and easy way to try out the software without dependencies. 
 
@@ -60,7 +59,6 @@ docker run -e POSTFIXADMIN_DB_TYPE=mysqli \
            -e POSTFIXADMIN_DB_USER=user \
            -e POSTFIXADMIN_DB_PASSWORD=topsecret \
            -e POSTFIXADMIN_DB_NAME=postfixadmin \
-           -e POSTFIXADMIN_SETUP_PASSWORD=topsecret \
            --name postfixadmin \
            -p 8080:80 \
         postfixadmin-image
@@ -80,6 +78,14 @@ docker run -v /local/path/to/config.local.php:/var/www/html/config.local.php \
            -p 8080:80 \
            postfixadmin-image
 ```
+
+# Next Steps
+
+Once the container is running, try visiting :
+
+ * http://localhost:8080/setup.php (to create admin users, default setup password is `topsecret99`)
+ * http://localhost:8080/ (to login as the domain admin you created through setup.php)
+
 
 # Docker Compose
 
@@ -113,7 +119,6 @@ services:
        POSTFIXADMIN_DB_USER: postfixadmin
        POSTFIXADMIN_DB_NAME: postfixadmin
        POSTFIXADMIN_DB_PASSWORD: postfixadminPassword
-       POSTFIXADMIN_SETUP_PASSWORD: topsecret
 
 ```
 
