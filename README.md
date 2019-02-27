@@ -44,10 +44,10 @@ You have two options :
  
 You can configure this through the following environment variables when running the docker container.
 
- * POSTFIXADMIN\_DB_\TYPE=...  - sqlite, mysqli, pgsql
- * POSTFIXADMIN\_DB_\NAME=.... - database name or path to database file (sqlite)
- * POSTFIXADMIN\_DB_\USER=...  - mysqli/pgsql only (db server user name)
- * POSTFIXADMIN\_DB_\PASSWORD=... - mysqli/pgsql only (db server user password)
+ * POSTFIXADMIN\_DB\_TYPE=...  - sqlite, mysqli, pgsql
+ * POSTFIXADMIN\_DB\_NAME=.... - database name or path to database file (sqlite)
+ * POSTFIXADMIN\_DB\_USER=...  - mysqli/pgsql only (db server user name)
+ * POSTFIXADMIN\_DB\_PASSWORD=... - mysqli/pgsql only (db server user password)
  
 Note: An SQLite database is probably not recommended for production use, but is a quick and easy way to try out the software without dependencies. 
 
