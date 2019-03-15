@@ -79,8 +79,7 @@ for variant in "${variants[@]}"; do
 	fi
 
 	variantParent="$(awk 'toupper($1) == "FROM" { print $2 }' "$variant/Dockerfile")"
-	#variantArches="${parentRepoToArches[$variantParent]}"
-	variantArches="amd64 arm64v8 i386"
+	variantArches="${parentRepoToArches[$variantParent]}"
 
 	cat <<-EOE
 
