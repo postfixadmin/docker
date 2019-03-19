@@ -66,7 +66,7 @@ for variant in "${variants[@]}"; do
 	commit="$(dockerfileCommit "$variant")"
 	fullversion="$(git show "$commit":"$variant/Dockerfile" | grep -iF "ARG POSTFIXADMIN_VERSION" | sed -E "s@ARG POSTFIXADMIN_VERSION=([0-9.]+)@\1@")"
 
-	versionAliases=( "$fullversion" "${fullversion%.*}" )
+	versionAliases=( "$fullversion" "${fullversion%.*}" "${fullversion%.*.*}" )
 	if [ "$fullversion" = "$latest" ]; then
 		versionAliases+=( "latest" )
 	fi
