@@ -12,7 +12,7 @@ RUN set -ex; \
 	libsqlite3-dev \
 	; \
 	\
-	docker-php-ext-install \
+	docker-php-ext-install -j "$(nproc)" \
 		mysqli \
 		pdo_mysql \
 		pdo_pgsql \
