@@ -72,6 +72,8 @@ if [[ "$1" == apache2* ]] || [ "$1" == php-fpm ]; then
 		\$CONF['database_password'] = '${POSTFIXADMIN_DB_PASSWORD}';
 		\$CONF['database_name'] = '${POSTFIXADMIN_DB_NAME}';
 		\$CONF['setup_password'] = '${POSTFIXADMIN_SETUP_PASSWORD}';
+		\$CONF['smtp_server'] = '${POSTFIXADMIN_SMTP_SERVER}';
+		\$CONF['smtp_port'] = '${POSTFIXADMIN_SMTP_PORT}';
 		\$CONF['configured'] = true;
 		?>" | tee config.local.php
 	else
