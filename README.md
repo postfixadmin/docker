@@ -51,6 +51,11 @@ You can configure this through the following environment variables when running 
 
 Note: An SQLite database is probably not recommended for production use, but is a quick and easy way to try out the software without dependencies. 
 
+You can also set the postfix host and port.
+
+ * POSTFIXADMIN\_SMTP\_SERVER=... - localhost per default
+ * POSTFIXADMIN\_SMTP\_PORT=...   - 25 per default
+
 ### Example docker run
 
 ```bash
@@ -59,6 +64,8 @@ docker run -e POSTFIXADMIN_DB_TYPE=mysqli \
            -e POSTFIXADMIN_DB_USER=user \
            -e POSTFIXADMIN_DB_PASSWORD=topsecret \
            -e POSTFIXADMIN_DB_NAME=postfixadmin \
+           -e POSTFIXADMIN_SMTP_SERVER=postfix \
+           -e POSTFIXADMIN_SMTP_PORT=25 \
            --name postfixadmin \
            -p 8080:80 \
         postfixadmin-image
@@ -119,6 +126,8 @@ services:
        POSTFIXADMIN_DB_USER: postfixadmin
        POSTFIXADMIN_DB_NAME: postfixadmin
        POSTFIXADMIN_DB_PASSWORD: postfixadminPassword
+       POSTFIXADMIN_SMTP_SERVER: postfix
+       POSTFIXADMIN_SMTP_PORT: 25
 
 ```
 

@@ -5,6 +5,8 @@ POSTFIXADMIN_DB_TYPE=${POSTFIXADMIN_DB_TYPE:=sqlite}
 POSTFIXADMIN_DB_HOST=${POSTFIXADMIN_DB_HOST:=""}
 POSTFIXADMIN_DB_USER=${POSTFIXADMIN_DB_USER:=""}
 POSTFIXADMIN_DB_PASSWORD=${POSTFIXADMIN_DB_PASSWORD:=""}
+POSTFIXADMIN_SMTP_SERVER=${POSTFIXADMIN_SMTP_SERVER:="localhost"}
+POSTFIXADMIN_SMTP_PORT=${POSTFIXADMIN_SMTP_PORT:="25"}
 
 # topsecret99
 DEFAULT_SETUP_PASSWORD="791eb4ead7fd996c01bed30707ae27dd:b7910d09773104bf84c4f4951205d2198c7cfc4f"
@@ -72,6 +74,8 @@ if [[ "$1" == apache2* ]] || [ "$1" == php-fpm ]; then
 		\$CONF['database_password'] = '${POSTFIXADMIN_DB_PASSWORD}';
 		\$CONF['database_name'] = '${POSTFIXADMIN_DB_NAME}';
 		\$CONF['setup_password'] = '${POSTFIXADMIN_SETUP_PASSWORD}';
+		\$CONF['smtp_server'] = '${POSTFIXADMIN_SMTP_SERVER}';
+		\$CONF['smtp_port'] = '${POSTFIXADMIN_SMTP_PORT}';
 		\$CONF['configured'] = true;
 		?>" | tee config.local.php
 	else
