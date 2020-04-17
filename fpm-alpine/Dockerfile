@@ -3,8 +3,7 @@ LABEL maintainer="David Goodwin <david@codepoets.co.uk> (@DavidGoodwin)"
 
 # docker-entrypoint.sh dependencies
 RUN apk add --no-cache \
-		bash \
-		coreutils
+		bash
 
 # Install required PHP extensions
 RUN set -ex; \
