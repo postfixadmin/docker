@@ -10,8 +10,13 @@ RUN set -ex; \
 	\
 	apk add --no-cache --virtual .build-deps \
 		imap-dev \
-		sqlite-dev \
+		krb5-dev \
+		libressl-dev \
 		postgresql-dev \
+		sqlite-dev \
+	; \
+	docker-php-ext-configure \
+		imap --with-imap-ssl --with-kerberos \
 	; \
 	docker-php-ext-install -j "$(nproc)" \
 		imap \

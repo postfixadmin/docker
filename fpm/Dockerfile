@@ -15,7 +15,7 @@ RUN set -ex; \
 	; \
 	\
 	docker-php-ext-configure \
-		imap --with-kerberos --with-imap-ssl \
+		imap --with-imap-ssl --with-kerberos \
 	; \
 	\
 	docker-php-ext-install -j "$(nproc)" \
