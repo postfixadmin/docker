@@ -11,7 +11,6 @@ RUN set -ex; \
 	apk add --no-cache --virtual .build-deps \
 		imap-dev \
 		krb5-dev \
-		libressl-dev \
 		postgresql-dev \
 		sqlite-dev \
 	; \
