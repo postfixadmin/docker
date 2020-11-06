@@ -1,5 +1,5 @@
 [![GitHub CI build status badge](https://github.com/postfixadmin/docker/workflows/GitHub%20CI/badge.svg)](https://github.com/postfixadmin/docker/actions?query=workflow%3A%22GitHub+CI%22)
-[![update.sh build status badge](https://img.shields.io/jenkins/s/https/doi-janky.infosiftr.net/job/update.sh/job/postfixadmin.svg?label=Automated%20update.sh)](https://doi-janky.infosiftr.net/job/update.sh/job/postfixadmin/)
+<!--[![update.sh build status badge](https://img.shields.io/jenkins/s/https/doi-janky.infosiftr.net/job/update.sh/job/postfixadmin.svg?label=Automated%20update.sh)](https://doi-janky.infosiftr.net/job/update.sh/job/postfixadmin/)-->
 [![amd64 build status badge](https://img.shields.io/jenkins/s/https/doi-janky.infosiftr.net/job/multiarch/job/amd64/job/postfixadmin.svg?label=amd64)](https://doi-janky.infosiftr.net/job/multiarch/job/amd64/job/postfixadmin)
 [![arm32v5 build status badge](https://img.shields.io/jenkins/s/https/doi-janky.infosiftr.net/job/multiarch/job/arm32v5/job/postfixadmin.svg?label=arm32v5)](https://doi-janky.infosiftr.net/job/multiarch/job/arm32v5/job/postfixadmin)
 [![arm32v6 build status badge](https://img.shields.io/jenkins/s/https/doi-janky.infosiftr.net/job/multiarch/job/arm32v6/job/postfixadmin.svg?label=arm32v6)](https://doi-janky.infosiftr.net/job/multiarch/job/arm32v6/job/postfixadmin)
