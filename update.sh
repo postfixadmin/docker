@@ -25,8 +25,4 @@ for variant in apache fpm fpm-alpine; do
 	if [ $variant != "apache" ]; then
 		sed -i -e '/APACHE_DOCUMENT_ROOT/d' "$dir/Dockerfile"
 	fi
-	travisEnv+='\n  - VARIANT='"$dir"
 done
-
-travis="$(awk -v 'RS=\n\n' '$1 == "env:" { $0 = "env:'"$travisEnv"'" } { printf "%s%s", $0, RS }' .travis.yml)"
-echo "$travis" > .travis.yml
