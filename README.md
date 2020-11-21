@@ -66,6 +66,19 @@ You can also set the postfix host and port.
  * POSTFIXADMIN\_SMTP\_SERVER=... - localhost per default
  * POSTFIXADMIN\_SMTP\_PORT=...   - 25 per default
 
+### Using Docker secrets
+
+As an alternative to passing sensitive information via environment variables, `_FILE` may be appended to some of the previously listed environment variables, causing the initialization script to load the values for those variables from files present in the container. In particular, this can be used to load passwords from Docker secrets stored in /run/secrets/<secret_name> files. For example:
+
+```bash
+docker run -e POSTFIXADMIN_DB_USER_FILE=/run/secrets/postfix-db-user
+           -e POSTFIXADMIN_DB_PASSWORD_FILE=/run/secrets/postfix-db-passwd
+           -e POSTFIXADMIN_SETUP_PASSWORD_FILE=/run/secrets/postfix-setup-passwd
+        postfixadmin-image
+```
+
+Currently, this is only supported for `POSTFIXADMIN_DB_USER`, `POSTFIXADMIN_DB_PASSWORD`, and `POSTFIXADMIN_SETUP_PASSWORD`.
+
 ### Example docker run
 
 ```bash
