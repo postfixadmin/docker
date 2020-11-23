@@ -1,27 +1,43 @@
 #!/bin/bash
 set -eo pipefail
 
-if [ -f "${POSTFIXADMIN_DB_USER_FILE}" ]; then
-  POSTFIXADMIN_DB_USER=`cat ${POSTFIXADMIN_DB_USER_FILE}`
-fi
-if [ -f "${POSTFIXADMIN_DB_PASSWORD_FILE}" ]; then
-  POSTFIXADMIN_DB_PASSWORD=`cat ${POSTFIXADMIN_DB_PASSWORD_FILE}`
-fi
-if [ -f "${POSTFIXADMIN_SETUP_PASSWORD_FILE}" ]; then
-  POSTFIXADMIN_SETUP_PASSWORD=`cat ${POSTFIXADMIN_SETUP_PASSWORD_FILE}`
-fi
+# usage: get_env_value VAR [DEFAULT]
+#    ie: get_env_value 'XYZ_DB_PASSWORD' 'example'
+# (will allow for "$XYZ_DB_PASSWORD_FILE" to fill in the value of
+#  "$XYZ_DB_PASSWORD" from a file, especially for Docker's secrets feature)
+function get_env_value() {
+	local varName="${1}"
+	local fileVarName="${varName}_FILE"
+	local defaultValue="${2:-}"
 
-POSTFIXADMIN_DB_TYPE=${POSTFIXADMIN_DB_TYPE:=sqlite}
-POSTFIXADMIN_DB_HOST=${POSTFIXADMIN_DB_HOST:=""}
-POSTFIXADMIN_DB_USER=${POSTFIXADMIN_DB_USER:=""}
-POSTFIXADMIN_DB_PASSWORD=${POSTFIXADMIN_DB_PASSWORD:=""}
-POSTFIXADMIN_SMTP_SERVER=${POSTFIXADMIN_SMTP_SERVER:="localhost"}
-POSTFIXADMIN_SMTP_PORT=${POSTFIXADMIN_SMTP_PORT:="25"}
+	if [ "${!varName:-}" ] && [ "${!fileVarName:-}" ]; then
+		echo >&2 "error: both ${varName} and ${fileVarName} are set (but are exclusive)"
+		exit 1
+	fi
+
+	local value="${defaultValue}"
+	if [ "${!varName:-}" ]; then
+	  value="${!varName}"
+	elif [ "${!fileVarName:-}" ]; then
+		value="$(< "${!fileVarName}")"
+	fi
+
+	echo ${value}
+	exit 0
+}
+
+# Init vars for running script
+POSTFIXADMIN_DB_TYPE=$(get_env_value 'POSTFIXADMIN_DB_TYPE' 'sqlite')
+POSTFIXADMIN_DB_HOST=$(get_env_value "POSTFIXADMIN_DB_HOST" "")
+POSTFIXADMIN_DB_PORT=$(get_env_value "POSTFIXADMIN_DB_PORT" "")
+POSTFIXADMIN_DB_USER=$(get_env_value "POSTFIXADMIN_DB_USER" "")
+POSTFIXADMIN_DB_PASSWORD=$(get_env_value "POSTFIXADMIN_DB_PASSWORD" "")
+POSTFIXADMIN_SMTP_SERVER=$(get_env_value "POSTFIXADMIN_SMTP_SERVER" "localhost")
+POSTFIXADMIN_SMTP_PORT=$(get_env_value "POSTFIXADMIN_SMTP_PORT" "25")
 
 # topsecret99
 DEFAULT_SETUP_PASSWORD="791eb4ead7fd996c01bed30707ae27dd:b7910d09773104bf84c4f4951205d2198c7cfc4f"
-POSTFIXADMIN_SETUP_PASSWORD=${POSTFIXADMIN_SETUP_PASSWORD:=$DEFAULT_SETUP_PASSWORD}
-
+POSTFIXADMIN_SETUP_PASSWORD=$(get_env_value "POSTFIXADMIN_SETUP_PASSWORD" "${DEFAULT_SETUP_PASSWORD}")
 
 if [[ "$1" == apache2* ]] || [ "$1" == php-fpm ]; then
 
