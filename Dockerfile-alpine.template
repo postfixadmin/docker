@@ -9,10 +9,16 @@ RUN apk add --no-cache \
 RUN set -ex; \
 	\
 	apk add --no-cache --virtual .build-deps \
-		sqlite-dev \
+		imap-dev \
+		krb5-dev \
 		postgresql-dev \
+		sqlite-dev \
+	; \
+	docker-php-ext-configure \
+		imap --with-imap-ssl --with-kerberos \
 	; \
 	docker-php-ext-install -j "$(nproc)" \
+		imap \
 		mysqli \
 		pdo_mysql \
 		pdo_pgsql \

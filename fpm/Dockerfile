@@ -8,11 +8,18 @@ RUN set -ex; \
 	\
 	apt-get update; \
 	apt-get install -y --no-install-recommends \
+	libc-client2007e-dev \
+	libkrb5-dev \
 	libpq-dev \
 	libsqlite3-dev \
 	; \
 	\
+	docker-php-ext-configure \
+		imap --with-imap-ssl --with-kerberos \
+	; \
+	\
 	docker-php-ext-install -j "$(nproc)" \
+		imap \
 		mysqli \
 		pdo_mysql \
 		pdo_pgsql \
