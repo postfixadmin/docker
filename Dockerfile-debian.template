@@ -40,9 +40,6 @@ ARG POSTFIXADMIN_SHA512=2bd7ae05addbaf3c6c7eebea16ec1e21b2c67c8e6161446ed82a9553
 ENV POSTFIXADMIN_VERSION $POSTFIXADMIN_VERSION
 ENV POSTFIXADMIN_SHA512 $POSTFIXADMIN_SHA512
 ENV APACHE_DOCUMENT_ROOT /var/www/html/public
-ENV POSTFIXADMIN_DB_USER_FILE /run/secrets/postfixadmin-db-user
-ENV POSTFIXADMIN_DB_PASSWORD_FILE /run/secrets/postfixadmin-db-password
-ENV POSTFIXADMIN_SETUP_PASSWORD_FILE /run/secrets/postfixadmin-setup-password
 
 RUN set -eu; sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-available/*.conf; \
 	sed -ri -e 's!/var/www/!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/apache2.conf /etc/apache2/conf-available/*.conf
