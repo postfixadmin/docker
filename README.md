@@ -77,7 +77,7 @@ docker run -e POSTFIXADMIN_DB_USER_FILE=/run/secrets/postfix-db-user
         postfixadmin-image
 ```
 
-Currently, this is only supported for `POSTFIXADMIN_DB_USER`, `POSTFIXADMIN_DB_PASSWORD`, and `POSTFIXADMIN_SETUP_PASSWORD`.
+All environment vars are supporting the secret's docker strategy.
 
 ### Example docker run
 
@@ -153,4 +153,3 @@ services:
        POSTFIXADMIN_SMTP_PORT: 25
 
 ```
-
