@@ -35,14 +35,13 @@ POSTFIXADMIN_DB_PASSWORD=$(get_env_value "POSTFIXADMIN_DB_PASSWORD" "")
 POSTFIXADMIN_SMTP_SERVER=$(get_env_value "POSTFIXADMIN_SMTP_SERVER" "localhost")
 POSTFIXADMIN_SMTP_PORT=$(get_env_value "POSTFIXADMIN_SMTP_PORT" "25")
 
-# topsecret99
-DEFAULT_SETUP_PASSWORD="791eb4ead7fd996c01bed30707ae27dd:b7910d09773104bf84c4f4951205d2198c7cfc4f"
+DEFAULT_SETUP_PASSWORD="changeme"
 POSTFIXADMIN_SETUP_PASSWORD=$(get_env_value "POSTFIXADMIN_SETUP_PASSWORD" "${DEFAULT_SETUP_PASSWORD}")
 
 if [[ "$1" == apache2* ]] || [ "$1" == php-fpm ]; then
 
 	if [ "${POSTFIXADMIN_SETUP_PASSWORD}" = "${DEFAULT_SETUP_PASSWORD}" ]; then
-		echo >&2 "WARNING: Using default setup.php password of : topsecret99"
+		echo >&2 "WARNING: setup.php password not set"
 	fi
 
 	if ! [ -e index.php -a -e scripts/postfixadmin-cli.php ]; then
@@ -111,7 +110,7 @@ if [[ "$1" == apache2* ]] || [ "$1" == php-fpm ]; then
 
 	if [ -f public/upgrade.php ]; then
 		echo " ** Running database / environment upgrade.php "
-		php public/upgrade.php
+		su-exec www-data php public/upgrade.php
 	fi
 fi
 

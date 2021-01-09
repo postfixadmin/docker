@@ -1,5 +1,13 @@
-FROM php:7.3-fpm
+FROM php:7.4-fpm
 LABEL maintainer="David Goodwin <david@codepoets.co.uk> (@DavidGoodwin)"
+
+# docker-entrypoint.sh dependencies
+RUN set -eux; \
+	apt-get update; \
+	apt-get install -y --no-install-recommends \
+		gosu \
+	; \
+	rm -rf /var/lib/apt/lists/*
 
 # Install required PHP extensions
 RUN set -ex; \
@@ -20,7 +28,6 @@ RUN set -ex; \
 	\
 	docker-php-ext-install -j "$(nproc)" \
 		imap \
-		mysqli \
 		pdo_mysql \
 		pdo_pgsql \
 		pdo_sqlite \
@@ -41,8 +48,8 @@ RUN set -ex; \
 	apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false; \
 	rm -rf /var/lib/apt/lists/*
 
-ARG POSTFIXADMIN_VERSION=3.2.4
-ARG POSTFIXADMIN_SHA512=2bd7ae05addbaf3c6c7eebea16ec1e21b2c67c8e6161446ed82a9553c26c04e19c1ec9ce248a9b9df504df56d309590259e6f04907b04b593548028b40e40d47
+ARG POSTFIXADMIN_VERSION=3.3.2
+ARG POSTFIXADMIN_SHA512=786c3c8323023259d44ee711a5a6f5b38882c32143d663a92fd3ef91d6bb693f3af97b380f92b345e68efa2275abead80c01b32180c381a3768cc929ab2d63de
 
 ENV POSTFIXADMIN_VERSION $POSTFIXADMIN_VERSION
 ENV POSTFIXADMIN_SHA512 $POSTFIXADMIN_SHA512
