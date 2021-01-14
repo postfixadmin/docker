@@ -25,4 +25,5 @@ for variant in apache fpm fpm-alpine; do
 	if [ $variant != "apache" ]; then
 		sed -i -e '/APACHE_DOCUMENT_ROOT/d' "$dir/Dockerfile"
 	fi
+	sed -i -e 's/gosu/su-exec/g' "fpm-alpine/docker-entrypoint.sh"
 done

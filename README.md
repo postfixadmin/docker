@@ -57,7 +57,7 @@ You can configure this through the following environment variables when running 
  * POSTFIXADMIN\_DB\_NAME=.... - database name or path to database file (sqlite)
  * POSTFIXADMIN\_DB\_USER=...  - mysqli/pgsql only (db server user name)
  * POSTFIXADMIN\_DB\_PASSWORD=... - mysqli/pgsql only (db server user password)
- * POSTFIXADMIN\_SETUP\_PASSWORD=... - generated from setup.php, default is topsecret99
+ * POSTFIXADMIN\_SETUP\_PASSWORD=... - generated from setup.php
 
 Note: An SQLite database is probably not recommended for production use, but is a quick and easy way to try out the software without dependencies. 
 
@@ -85,7 +85,7 @@ All environment vars are supporting the secret's docker strategy.
 docker run -e POSTFIXADMIN_DB_TYPE=mysqli \
            -e POSTFIXADMIN_DB_HOST=whatever \
            -e POSTFIXADMIN_DB_USER=user \
-           -e POSTFIXADMIN_DB_PASSWORD=topsecret \
+           -e POSTFIXADMIN_DB_PASSWORD=changeme \
            -e POSTFIXADMIN_DB_NAME=postfixadmin \
            -e POSTFIXADMIN_SMTP_SERVER=postfix \
            -e POSTFIXADMIN_SMTP_PORT=25 \
@@ -113,7 +113,7 @@ docker run -v /local/path/to/config.local.php:/var/www/html/config.local.php \
 
 Once the container is running, try visiting :
 
- * http://localhost:8080/setup.php (to create admin users, default setup password is `topsecret99`)
+ * http://localhost:8080/setup.php (to create admin users)
  * http://localhost:8080/ (to login as the domain admin you created through setup.php)
 
 
