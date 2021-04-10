@@ -34,6 +34,8 @@ POSTFIXADMIN_DB_USER=$(get_env_value "POSTFIXADMIN_DB_USER" "")
 POSTFIXADMIN_DB_PASSWORD=$(get_env_value "POSTFIXADMIN_DB_PASSWORD" "")
 POSTFIXADMIN_SMTP_SERVER=$(get_env_value "POSTFIXADMIN_SMTP_SERVER" "localhost")
 POSTFIXADMIN_SMTP_PORT=$(get_env_value "POSTFIXADMIN_SMTP_PORT" "25")
+POSTFIXADMIN_ENCRYPT=$(get_env_value "POSTFIXADMIN_ENCRYPT" "md5crypt")
+
 
 DEFAULT_SETUP_PASSWORD="changeme"
 POSTFIXADMIN_SETUP_PASSWORD=$(get_env_value "POSTFIXADMIN_SETUP_PASSWORD" "${DEFAULT_SETUP_PASSWORD}")
@@ -101,6 +103,7 @@ if [[ "$1" == apache2* ]] || [ "$1" == php-fpm ]; then
 		\$CONF['setup_password'] = '${POSTFIXADMIN_SETUP_PASSWORD}';
 		\$CONF['smtp_server'] = '${POSTFIXADMIN_SMTP_SERVER}';
 		\$CONF['smtp_port'] = '${POSTFIXADMIN_SMTP_PORT}';
+		\$CONF['encrypt'] = '${POSTFIXADMIN_ENCRYPT}';
 		\$CONF['configured'] = true;
 		?>" | tee config.local.php
 	else
