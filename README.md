@@ -58,7 +58,7 @@ You can configure this through the following environment variables when running 
  * POSTFIXADMIN\_DB\_USER=...  - mysqli/pgsql only (db server user name)
  * POSTFIXADMIN\_DB\_PASSWORD=... - mysqli/pgsql only (db server user password)
  * POSTFIXADMIN\_SETUP\_PASSWORD=... - generated from setup.php
- * POSTFIXADMIN_PASSWD_ENCRYPTION=... - database password encryption (e.g. md5crypt, SHA512-CRYPT)
+ * POSTFIXADMIN_ENCRYPT=... - database password encryption (e.g. md5crypt, SHA512-CRYPT)
 
 
 Note: An SQLite database is probably not recommended for production use, but is a quick and easy way to try out the software without dependencies. 
@@ -91,7 +91,7 @@ docker run -e POSTFIXADMIN_DB_TYPE=mysqli \
            -e POSTFIXADMIN_DB_NAME=postfixadmin \
            -e POSTFIXADMIN_SMTP_SERVER=postfix \
            -e POSTFIXADMIN_SMTP_PORT=25 \
-           -e POSTFIXADMIN_PASSWD_ENCRYPTION=md5crypt \
+           -e POSTFIXADMIN_ENCRYPT=md5crypt \
            --name postfixadmin \
            -p 8080:80 \
         postfixadmin-image
@@ -154,6 +154,6 @@ services:
        POSTFIXADMIN_DB_PASSWORD: postfixadminPassword
        POSTFIXADMIN_SMTP_SERVER: postfix
        POSTFIXADMIN_SMTP_PORT: 25
-       POSTFIXADMIN_PASSWD_ENCRYPTION: md5crypt
+       POSTFIXADMIN_ENCRYPT: md5crypt
 
 ```
