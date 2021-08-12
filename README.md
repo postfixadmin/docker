@@ -57,7 +57,7 @@ You can configure this through the following environment variables when running 
  * POSTFIXADMIN\_DB\_NAME=.... - database name or path to database file (sqlite)
  * POSTFIXADMIN\_DB\_USER=...  - mysqli/pgsql only (db server user name)
  * POSTFIXADMIN\_DB\_PASSWORD=... - mysqli/pgsql only (db server user password)
- * POSTFIXADMIN\_SETUP\_PASSWORD=... - generated from setup.php
+ * POSTFIXADMIN\_SETUP\_PASSWORD=... - generated from setup.php or `php -r "echo password_hash('mysecretpassword', PASSWORD_DEFAULT);"`
 
 Note: An SQLite database is probably not recommended for production use, but is a quick and easy way to try out the software without dependencies. 
 
