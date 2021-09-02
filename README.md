@@ -56,6 +56,8 @@ You can configure this through the following environment variables when running 
  * POSTFIXADMIN\_DB\_TYPE=...  - sqlite, mysqli, pgsql
  * POSTFIXADMIN\_DB\_NAME=.... - database name or path to database file (sqlite)
  * POSTFIXADMIN\_DB\_USER=...  - mysqli/pgsql only (db server user name)
+ * POSTFIXADMIN\_DB\_HOST=...  - hostname for database, default is localhost.
+ * POSTFIXADMIN\_DB\_PORT=...  - port for the database (optional)
  * POSTFIXADMIN\_DB\_PASSWORD=... - mysqli/pgsql only (db server user password)
  * POSTFIXADMIN_ENCRYPT=... - database password encryption (e.g. md5crypt, SHA512-CRYPT)
  * POSTFIXADMIN\_SETUP\_PASSWORD=... - generated from setup.php or `php -r "echo password_hash('mysecretpassword', PASSWORD_DEFAULT);"`
