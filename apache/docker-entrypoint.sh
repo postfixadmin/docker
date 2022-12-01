@@ -22,7 +22,7 @@ function get_env_value() {
 		value="$(< "${!fileVarName}")"
 	fi
 
-	echo ${value}
+	echo "${value}"
 	exit 0
 }
 
@@ -46,7 +46,7 @@ if [[ "$1" == apache2* ]] || [ "$1" == php-fpm ]; then
 		echo >&2 "WARNING: setup.php password not set"
 	fi
 
-	if ! [ -e index.php -a -e scripts/postfixadmin-cli.php ]; then
+	if ! [ -e index.php ] && [ -e scripts/postfixadmin-cli.php ]; then
 		echo >&2 "Postfixadmin not found in $PWD - copying now..."
 		if [ "$(ls -A)" ]; then
 			echo >&2 "WARNING: $PWD is not empty - press Ctrl+C now if this is an error!"
@@ -72,7 +72,7 @@ if [[ "$1" == apache2* ]] || [ "$1" == php-fpm ]; then
 	esac
 
 	if [ "${POSTFIXADMIN_DB_TYPE}" != "sqlite" ]; then
-		if [ -z "${POSTFIXADMIN_DB_USER}" -o -z "${POSTFIXADMIN_DB_PASSWORD}" ]; then
+		if [ -z "${POSTFIXADMIN_DB_USER}" ] || [ -z "${POSTFIXADMIN_DB_PASSWORD}" ]; then
 			echo >&2 'Error: POSTFIXADMIN_DB_USER and POSTFIXADMIN_DB_PASSWORD must be specified. '
 			exit 1
 		fi
