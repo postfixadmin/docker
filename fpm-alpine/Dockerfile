@@ -1,4 +1,4 @@
-FROM php:8.1-fpm-alpine
+FROM php:8.0-fpm-alpine
 LABEL maintainer="David Goodwin <david@codepoets.co.uk> (@DavidGoodwin)"
 
 # docker-entrypoint.sh dependencies

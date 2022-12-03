@@ -1,4 +1,4 @@
-FROM php:8.1-apache
+FROM php:8.0-apache
 LABEL maintainer="David Goodwin <david@codepoets.co.uk> (@DavidGoodwin)"
 
 # docker-entrypoint.sh dependencies
