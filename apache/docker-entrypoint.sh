@@ -46,7 +46,7 @@ if [[ "$1" == apache2* ]] || [ "$1" == php-fpm ]; then
 		echo >&2 "WARNING: setup.php password not set"
 	fi
 
-	if ! [ -e index.php ] && [ -e scripts/postfixadmin-cli.php ]; then
+	if ! [ -e index.php ] && ! [ -e scripts/postfixadmin-cli.php ]; then
 		echo >&2 "Postfixadmin not found in $PWD - copying now..."
 		if [ "$(ls -A)" ]; then
 			echo >&2 "WARNING: $PWD is not empty - press Ctrl+C now if this is an error!"
