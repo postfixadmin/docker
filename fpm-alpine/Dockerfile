@@ -31,8 +31,8 @@ RUN set -ex; \
 			| sort -u \
 			| awk 'system("[ -e /usr/local/lib/" $1 " ]") == 0 { next } { print "so:" $1 }' \
 	)"; \
-	apk add --virtual .postfixadmin-phpexts-rundeps $runDeps; \
-	apk del .build-deps
+	apk add --no-network --virtual .postfixadmin-phpexts-rundeps $runDeps; \
+	apk del --no-network .build-deps
 
 ARG POSTFIXADMIN_VERSION=3.3.13
 ARG POSTFIXADMIN_SHA512=bf7daaa089ee3adc4b557f1a7d0509d78979ef688fb725bab795f5c9d81e8774296245fde0cb184db51e9185cad381682c3ecc0bfadf852388b499a0a95cca64
