@@ -35,7 +35,8 @@ POSTFIXADMIN_DB_PASSWORD=$(get_env_value "POSTFIXADMIN_DB_PASSWORD" "")
 POSTFIXADMIN_SMTP_SERVER=$(get_env_value "POSTFIXADMIN_SMTP_SERVER" "localhost")
 POSTFIXADMIN_SMTP_PORT=$(get_env_value "POSTFIXADMIN_SMTP_PORT" "25")
 POSTFIXADMIN_ENCRYPT=$(get_env_value "POSTFIXADMIN_ENCRYPT" "md5crypt")
-
+POSTFIXADMIN_DKIM=$(get_env_value "POSTFIXADMIN_DKIM" "NO")
+POSTFIXADMIN_DKIM_ALL_ADMINS=$(get_env_value "POSTFIXADMIN_DKIM_ALL_ADMINS" "NO")
 
 DEFAULT_SETUP_PASSWORD="changeme"
 POSTFIXADMIN_SETUP_PASSWORD=$(get_env_value "POSTFIXADMIN_SETUP_PASSWORD" "${DEFAULT_SETUP_PASSWORD}")
@@ -105,6 +106,8 @@ if [[ "$1" == apache2* ]] || [ "$1" == php-fpm ]; then
 		\$CONF['smtp_port'] = '${POSTFIXADMIN_SMTP_PORT}';
 		\$CONF['encrypt'] = '${POSTFIXADMIN_ENCRYPT}';
 		\$CONF['configured'] = true;
+		\$CONF['dkim'] = '${POSTFIXADMIN_DKIM}';
+		\$CONF['dkim_all_admins'] = '${POSTFIXADMIN_DKIM_ALL_ADMINS}';
 		?>" | tee config.local.php
 	else
 		echo "WARNING: $PWD/config.local.php already exists."
