@@ -69,6 +69,10 @@ You can also set the postfix host and port.
  * POSTFIXADMIN\_SMTP\_SERVER=... - localhost per default
  * POSTFIXADMIN\_SMTP\_PORT=...   - 25 per default
 
+You can enable DKIM through the following enviroment variables
+ * POSTFIXADMIN\_DKIM=...  - YES/NO
+ * POSTFIXADMIN\_DKIM\_ALL\_ADMINS=... - YES/NO
+
 ### Using Docker secrets
 
 As an alternative to passing sensitive information via environment variables, `_FILE` may be appended to some of the previously listed environment variables, causing the initialization script to load the values for those variables from files present in the container. In particular, this can be used to load passwords from Docker secrets stored in /run/secrets/<secret_name> files. For example:
@@ -93,6 +97,8 @@ docker run -e POSTFIXADMIN_DB_TYPE=mysqli \
            -e POSTFIXADMIN_SMTP_SERVER=postfix \
            -e POSTFIXADMIN_SMTP_PORT=25 \
            -e POSTFIXADMIN_ENCRYPT=md5crypt \
+           -e POSTFIXADMIN_DKIM=YES \
+           -e POSTFIXADMIN_DKIM_ALL_ADMINS=NO \
            --name postfixadmin \
            -p 8080:80 \
         postfixadmin-image
