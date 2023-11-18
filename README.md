@@ -81,7 +81,7 @@ As an alternative to passing sensitive information via environment variables, `_
 docker run -e POSTFIXADMIN_DB_USER_FILE=/run/secrets/postfix-db-user
            -e POSTFIXADMIN_DB_PASSWORD_FILE=/run/secrets/postfix-db-passwd
            -e POSTFIXADMIN_SETUP_PASSWORD_FILE=/run/secrets/postfix-setup-passwd
-        postfixadmin-image
+        postfixadmin
 ```
 
 All environment vars are supporting the secret's docker strategy.
@@ -101,7 +101,7 @@ docker run -e POSTFIXADMIN_DB_TYPE=mysqli \
            -e POSTFIXADMIN_DKIM_ALL_ADMINS=NO \
            --name postfixadmin \
            -p 8080:80 \
-        postfixadmin-image
+        postfixadmin
 ```
 
 
@@ -116,7 +116,7 @@ To customise, copy this file, remove everything you don't want to override, and 
 docker run -v /local/path/to/config.local.php:/var/www/html/config.local.php \
            --name postfixadmin \
            -p 8080:80 \
-           postfixadmin-image
+           postfixadmin
 ```
 
 # Next Steps
@@ -149,7 +149,7 @@ services:
    postfixadmin:
      depends_on:
        - db
-     image: postfixadmin-image:latest
+     image: postfixadmin:latest
      ports:
        - "8000:80"
      restart: always
