@@ -37,7 +37,7 @@ Use this variant if you already have a seperate webserver.
 
 # Running
 
-Some knowledge of Postixadmin is assumed. 
+Some knowledge of Postfixadmin is assumed. 
 
 Advanced users will probably want to specify a custom configuration (config.local.php file).
 
