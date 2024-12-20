@@ -92,6 +92,8 @@ Note, the POSTFIXADMIN_SETUP_PASSWORD varaible contains dollar signs, so needs q
 
 ### Example docker run
 
+Setup password is : mysecretpassword 
+
 ```bash
 docker run -e POSTFIXADMIN_DB_TYPE=mysqli \
            -e POSTFIXADMIN_DB_HOST=whatever \
@@ -109,6 +111,7 @@ docker run -e POSTFIXADMIN_DB_TYPE=mysqli \
         postfixadmin
 ```
 
+Then visit http://localhost:8080/setup.php. Use mysecretpassword to login to the page.
 
 ## Existing setup / with config.local.php
 
