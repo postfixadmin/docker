@@ -60,7 +60,7 @@ You can configure this through the following environment variables when running 
  * POSTFIXADMIN\_DB\_PORT=...  - port for the database (optional)
  * POSTFIXADMIN\_DB\_PASSWORD=... - mysqli/pgsql only (db server user password)
  * POSTFIXADMIN_ENCRYPT=... - database password encryption (e.g. md5crypt, SHA512-CRYPT)
- * POSTFIXADMIN\_SETUP\_PASSWORD=... - generated from setup.php or `php -r "echo password_hash('mysecretpassword', PASSWORD_DEFAULT);"`
+ * POSTFIXADMIN\_SETUP\_PASSWORD=... - generated from setup.php or `php -r "echo password_hash('mysecretpassword', PASSWORD_DEFAULT);"` 
 
 Note: An SQLite database is probably not recommended for production use, but is a quick and easy way to try out the software without dependencies.
 
@@ -88,7 +88,11 @@ docker run -e POSTFIXADMIN_DB_USER_FILE=/run/secrets/postfix-db-user
 
 All environment vars are supporting the secret's docker strategy.
 
+Note, the POSTFIXADMIN_SETUP_PASSWORD varaible contains dollar signs, so needs quoting to avoid variable expansion. See also #63
+
 ### Example docker run
+
+Setup password is : mysecretpassword 
 
 ```bash
 docker run -e POSTFIXADMIN_DB_TYPE=mysqli \
@@ -96,6 +100,7 @@ docker run -e POSTFIXADMIN_DB_TYPE=mysqli \
            -e POSTFIXADMIN_DB_USER=user \
            -e POSTFIXADMIN_DB_PASSWORD=changeme \
            -e POSTFIXADMIN_DB_NAME=postfixadmin \
+           -e POSTFIXADMIN_SETUP_PASSWORD='$2y$10$3ycavDC7g.JQrxZRRDZ5IuS2O2Y6Rpl79XWTDnbI5nPREYfUIf6dK' \
            -e POSTFIXADMIN_SMTP_SERVER=postfix \
            -e POSTFIXADMIN_SMTP_PORT=25 \
            -e POSTFIXADMIN_ENCRYPT=md5crypt \
@@ -106,6 +111,7 @@ docker run -e POSTFIXADMIN_DB_TYPE=mysqli \
         postfixadmin
 ```
 
+Then visit http://localhost:8080/setup.php. Use mysecretpassword to login to the page.
 
 ## Existing setup / with config.local.php
 
@@ -133,14 +139,22 @@ Once the container is running, try visiting :
 
 Try something like the below in a **docker-compose.yml** file; changing the usernames/passwords as required.
 
-Then run : `docker-compose up`
+This is using a POSTFIXADMIN_SETUP_PASSWORD of 'mysecretpassword'. Note a $ is changed to $$ to get around variable expansion issues ( see #63 )
+
+## Steps 
+
+ 1. `docker compose up` 
+ 2. `docker compose logs -f postfixadmin` (it may take about 30s for the database to build, and the web ui to be ready)
+ 3. Point your web browser at http://localhost:8000/setup.php - login with your setup password (mysecretpassword).
+ 4. Add a super admin account .... 
+ 5. Visit http://localhost:8000/login.php and login with your new admin account, add mailboxes etc.
+
 
 ```yaml
-version: '3'
 
 services:
    db:
-     image: mysql:5.7
+     image: mysql:8.0
      restart: always
      environment:
        MYSQL_ROOT_PASSWORD: notSecureChangeMe
@@ -162,6 +176,7 @@ services:
        POSTFIXADMIN_DB_NAME: postfixadmin
        POSTFIXADMIN_DB_PASSWORD: postfixadminPassword
        POSTFIXADMIN_SMTP_SERVER: postfix
+       POSTFIXADMIN_SETUP_PASSWORD: $$2y$$10$$8./sbCrwpLGeWv/6auLtC.ROq/pRpm573QNdISESNqZ9p0uoL3eq6
        POSTFIXADMIN_SMTP_PORT: 25
        POSTFIXADMIN_ENCRYPT: md5crypt
 
