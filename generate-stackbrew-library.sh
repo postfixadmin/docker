@@ -1,23 +1,22 @@
-#!/bin/bash
-set -euo pipefail
+#!/usr/bin/env bash
+set -Eeuo pipefail
 
 self="$(basename "$BASH_SOURCE")"
 cd "$(dirname "$(readlink -f "$BASH_SOURCE")")"
 defaultVariant='apache'
 
-# Get the most recent commit which modified any of "$@".
+# get the most recent commit which modified any of "$@"
 fileCommit() {
 	git log -1 --format='format:%H' HEAD -- "$@"
 }
 
-# Get the most recent commit which modified "$1/Dockerfile" or any file that
-# the Dockerfile copies into the rootfs (with COPY).
-dockerfileCommit() {
+# get the most recent commit which modified "$1/Dockerfile" or any file COPY'd from "$1/Dockerfile"
+dirCommit() {
 	local dir="$1"; shift
 	(
-		cd "$dir";
-		fileCommit Dockerfile \
-			$(git show HEAD:./Dockerfile | awk '
+		cd "$dir"
+		files="$(
+			git show HEAD:./Dockerfile | awk '
 				toupper($1) == "COPY" {
 					for (i = 2; i < NF; i++) {
 						if ($i ~ /^--from=/) {
@@ -26,27 +25,48 @@ dockerfileCommit() {
 						print $i
 					}
 				}
-			')
+			'
+		)"
+		fileCommit Dockerfile $files
 	)
 }
 
+gawkParents='
+	{ cmd = toupper($1) }
+	cmd == "FROM" {
+		print $2
+		next
+	}
+	cmd == "COPY" {
+		for (i = 2; i < NF; i++) {
+			if ($i ~ /^--from=/) {
+				gsub(/^--from=/, "", $i)
+				print $i
+				next
+			}
+		}
+	}
+'
+
 getArches() {
 	local repo="$1"; shift
-	local officialImagesUrl='https://github.com/docker-library/official-images/raw/master/library/'
+	local officialImagesBase="${BASHBREW_LIBRARY:-https://github.com/docker-library/official-images/raw/HEAD/library}/"
 
-	eval "declare -g -A parentRepoToArches=( $(
-		find -name 'Dockerfile' -exec awk '
-				toupper($1) == "FROM" && $2 !~ /^('"$repo"'|scratch|microsoft\/[^:]+)(:|$)/ {
-					print "'"$officialImagesUrl"'" $2
-				}
-			' '{}' + \
+	local parentRepoToArchesStr
+	parentRepoToArchesStr="$(
+		find -name 'Dockerfile' -exec gawk "$gawkParents" '{}' + \
 			| sort -u \
-			| xargs bashbrew cat --format '[{{ .RepoName }}:{{ .TagName }}]="{{ join " " .TagEntry.Architectures }}"'
-	) )"
+			| gawk -v officialImagesBase="$officialImagesBase" '
+				$1 !~ /^('"$repo"'|scratch|.*\/.*)(:|$)/ {
+					printf "%s%s\n", officialImagesBase, $1
+				}
+			' \
+			| xargs -r bashbrew cat --format '["{{ .RepoName }}:{{ .TagName }}"]="{{ join " " .TagEntry.Architectures }}"'
+	)"
+	eval "declare -g -A parentRepoToArches=( $parentRepoToArchesStr )"
 }
 getArches 'postfixadmin'
 
-# Header.
 cat <<-EOH
 # This file is generated via https://github.com/postfixadmin/docker/blob/$(fileCommit "$self")/$self
 Maintainers: David Goodwin <david@codepoets.co.uk> (@DavidGoodwin)
@@ -60,14 +80,13 @@ join() {
 	echo "${out#$sep}"
 }
 
-SEARCHFOR="Upgrade available - the latest version is "
-latest=$(curl -fsSL http://postfixadmin.sourceforge.net/update-check.php | grep -iF "$SEARCHFOR" | sed -E "s@${SEARCHFOR}([0-9.]+)</div>@\1@")
+latest="$(curl -fsSL https://api.github.com/repos/postfixadmin/postfixadmin/releases/latest | jq -r '.tag_name' | tr -d 'v')"
 
 variants=( */ )
 variants=( "${variants[@]%/}" )
 
 for variant in "${variants[@]}"; do
-	commit="$(dockerfileCommit "$variant")"
+	commit="$(dirCommit "$variant")"
 	fullversion="$(git show "$commit":"$variant/Dockerfile" | grep -iF "ARG POSTFIXADMIN_VERSION" | sed -E "s@ARG POSTFIXADMIN_VERSION=([0-9.]+)@\1@")"
 
 	versionAliases=( "$fullversion" "${fullversion%.*}" "${fullversion%.*.*}" )
@@ -82,8 +101,22 @@ for variant in "${variants[@]}"; do
 		variantAliases+=( "${versionAliases[@]}" )
 	fi
 
-	variantParent="$(awk 'toupper($1) == "FROM" { print $2 }' "$variant/Dockerfile")"
-	variantArches="${parentRepoToArches[$variantParent]}"
+	variantParents="$(gawk "$gawkParents" "$variant/Dockerfile")"
+	variantArches=
+	for variantParent in $variantParents; do
+		parentArches="${parentRepoToArches[$variantParent]:-}"
+		if [ -z "$parentArches" ]; then
+			continue
+		elif [ -z "$variantArches" ]; then
+			variantArches="$parentArches"
+		else
+			variantArches="$(
+				comm -12 \
+					<(xargs -n1 <<<"$variantArches" | sort -u) \
+					<(xargs -n1 <<<"$parentArches" | sort -u)
+				)"
+		fi
+	done
 
 	cat <<-EOE
 
