@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 set -eo pipefail
 
 # usage: get_env_value VAR [DEFAULT]
@@ -26,20 +26,82 @@ function get_env_value() {
 	exit 0
 }
 
+function get_database_env_value() {
+	local suffix="$1"
+	local default_value="${2-}"
+
+	local primary_name="POSTFIXADMIN_DB_${suffix}"
+	local fallback_name="POSTFIXADMIN_DATABASE_${suffix}"
+
+	local primary_file_name="${primary_name}_FILE"
+	local fallback_file_name="${fallback_name}_FILE"
+
+	if [[ -n "${!primary_name:-}" && -n "${!fallback_name:-}" ]]; then
+		echo >&2 "Error : both ${primary_name} and ${fallback_name} are set (but are exclusive)"
+		exit 1
+	fi
+
+	if [[ -n "${!primary_file_name:-}" && -n "${!fallback_file_name:-}" ]]; then
+		echo >&2 "Error : both ${primary_file_name} and ${fallback_file_name} are set (but are exclusive)"
+		exit 1
+	fi
+
+	# Priority to POSTFIXADMIN_DB_*
+	if [[ -n "${!primary_name:-}" || -n "${!primary_file_name:-}" ]]; then
+		get_env_value "${primary_name}" "${default_value}"
+	else
+		get_env_value "${fallback_name}" "${default_value}"
+	fi
+}
+
+function php_escape() {
+    local value="$1"
+
+    value=${value//\\/\\\\}
+    value=${value//\'/\\\'}
+
+    printf '%s' "${value}"
+}
+
+function config_name_from_env() {
+    local env_name="$1"
+
+    case "${env_name}" in
+        POSTFIXADMIN_DB_TYPE)
+            printf '%s' 'database_type'
+            ;;
+        POSTFIXADMIN_DB_HOST)
+            printf '%s' 'database_host'
+            ;;
+        POSTFIXADMIN_DB_PORT)
+            printf '%s' 'database_port'
+            ;;
+        POSTFIXADMIN_DB_USER)
+            printf '%s' 'database_user'
+            ;;
+        POSTFIXADMIN_DB_PASSWORD)
+            printf '%s' 'database_password'
+            ;;
+        POSTFIXADMIN_DB_NAME)
+            printf '%s' 'database_name'
+            ;;
+        *)
+            local config_name="${env_name#POSTFIXADMIN_}"
+            printf '%s' "${config_name,,}"
+            ;;
+    esac
+}
+
 # Init vars for running script
-POSTFIXADMIN_DB_TYPE=$(get_env_value 'POSTFIXADMIN_DB_TYPE' 'sqlite')
-POSTFIXADMIN_DB_HOST=$(get_env_value "POSTFIXADMIN_DB_HOST" "")
-POSTFIXADMIN_DB_PORT=$(get_env_value "POSTFIXADMIN_DB_PORT" "")
-POSTFIXADMIN_DB_USER=$(get_env_value "POSTFIXADMIN_DB_USER" "")
-POSTFIXADMIN_DB_PASSWORD=$(get_env_value "POSTFIXADMIN_DB_PASSWORD" "")
-POSTFIXADMIN_SMTP_SERVER=$(get_env_value "POSTFIXADMIN_SMTP_SERVER" "localhost")
-POSTFIXADMIN_SMTP_PORT=$(get_env_value "POSTFIXADMIN_SMTP_PORT" "25")
-POSTFIXADMIN_ENCRYPT=$(get_env_value "POSTFIXADMIN_ENCRYPT" "md5crypt")
-POSTFIXADMIN_DKIM=$(get_env_value "POSTFIXADMIN_DKIM" "NO")
-POSTFIXADMIN_DKIM_ALL_ADMINS=$(get_env_value "POSTFIXADMIN_DKIM_ALL_ADMINS" "NO")
+export POSTFIXADMIN_DB_TYPE=$(get_database_env_value 'TYPE' 'sqlite')
+export POSTFIXADMIN_DB_HOST=$(get_database_env_value "HOST" "")
+export POSTFIXADMIN_DB_NAME=$(get_database_env_value "NAME" "")
+export POSTFIXADMIN_DB_PORT=$(get_database_env_value "PORT" "")
+export POSTFIXADMIN_DB_USER=$(get_database_env_value "USER" "")
+export POSTFIXADMIN_DB_PASSWORD=$(get_database_env_value "PASSWORD" "")
 
 DEFAULT_SETUP_PASSWORD="changeme"
-POSTFIXADMIN_SETUP_PASSWORD=$(get_env_value "POSTFIXADMIN_SETUP_PASSWORD" "${DEFAULT_SETUP_PASSWORD}")
+export POSTFIXADMIN_SETUP_PASSWORD=$(get_env_value "POSTFIXADMIN_SETUP_PASSWORD" "${DEFAULT_SETUP_PASSWORD}")
 
 if [[ "$1" == apache2* ]] || [ "$1" == php-fpm ]; then
 
@@ -72,14 +134,6 @@ if [[ "$1" == apache2* ]] || [ "$1" == php-fpm ]; then
 		;;
 	esac
 
-	if [ "${POSTFIXADMIN_DB_TYPE}" != "sqlite" ]; then
-		if [ -z "${POSTFIXADMIN_DB_USER}" ] || [ -z "${POSTFIXADMIN_DB_PASSWORD}" ]; then
-			echo >&2 'Error: POSTFIXADMIN_DB_USER and POSTFIXADMIN_DB_PASSWORD must be specified. '
-			exit 1
-		fi
-		timeout 15 bash -c "until echo > /dev/tcp/${POSTFIXADMIN_DB_HOST}/${POSTFIXADMIN_DB_PORT}; do sleep 0.5; done"
-	fi
-
 	if [ "${POSTFIXADMIN_DB_TYPE}" = 'sqlite' ]; then
 		: "${POSTFIXADMIN_DB_NAME:=/var/tmp/postfixadmin.db}"
 
@@ -89,26 +143,50 @@ if [[ "$1" == apache2* ]] || [ "$1" == php-fpm ]; then
 			chown www-data:www-data $POSTFIXADMIN_DB_NAME
 			chmod 0700 $POSTFIXADMIN_DB_NAME
 		fi
+	else
+		if [ -z "${POSTFIXADMIN_DB_USER}" ] || [ -z "${POSTFIXADMIN_DB_PASSWORD}" ]; then
+			echo >&2 'Error: POSTFIXADMIN_DB_USER and POSTFIXADMIN_DB_PASSWORD must be specified. '
+			exit 1
+		fi
+		timeout 15 bash -c "until echo > /dev/tcp/${POSTFIXADMIN_DB_HOST}/${POSTFIXADMIN_DB_PORT}; do sleep 0.5; done"
 	fi
 
 	if [ ! -e config.local.php ]; then
 		touch config.local.php
 		echo "Write config to $PWD/config.local.php"
-		echo "<?php
-		\$CONF['database_type'] = '${POSTFIXADMIN_DB_TYPE}';
-		\$CONF['database_host'] = '${POSTFIXADMIN_DB_HOST}';
-		\$CONF['database_port'] = '${POSTFIXADMIN_DB_PORT}';
-		\$CONF['database_user'] = '${POSTFIXADMIN_DB_USER}';
-		\$CONF['database_password'] = '${POSTFIXADMIN_DB_PASSWORD}';
-		\$CONF['database_name'] = '${POSTFIXADMIN_DB_NAME}';
-		\$CONF['setup_password'] = '${POSTFIXADMIN_SETUP_PASSWORD}';
-		\$CONF['smtp_server'] = '${POSTFIXADMIN_SMTP_SERVER}';
-		\$CONF['smtp_port'] = '${POSTFIXADMIN_SMTP_PORT}';
-		\$CONF['encrypt'] = '${POSTFIXADMIN_ENCRYPT}';
-		\$CONF['configured'] = true;
-		\$CONF['dkim'] = '${POSTFIXADMIN_DKIM}';
-		\$CONF['dkim_all_admins'] = '${POSTFIXADMIN_DKIM_ALL_ADMINS}';
-		?>" | tee config.local.php
+		{
+			printf '%s\n' '<?php'
+			printf '%s\n' ''
+			printf '%s\n' '// Generated automatically by Docker entrypoint.'
+			printf '%s\n' ''
+			printf "%s\n" "\$CONF['configured'] = true;"
+
+			while IFS= read -r env_name; do
+				case "${env_name}" in
+					POSTFIXADMIN_CONFIG_FILE \
+					| POSTFIXADMIN_CONFIGURED \
+					| POSTFIXADMIN_DATABASE_* \
+					| POSTFIXADMIN_*_FILE)
+						continue
+						;;
+				esac
+
+				config_name="$(config_name_from_env "${env_name}")"
+				value="${!env_name}"
+
+				printf "\$CONF['%s'] = '%s';\n" \
+					"${config_name}" \
+					"$(php_escape "${value}")"
+
+			done < <(
+				compgen -e |
+					grep '^POSTFIXADMIN_' |
+					sort
+			)
+
+			printf '\n'
+		} >"$PWD/config.local.php"
+		cat "$PWD/config.local.php"
 	else
 		echo "WARNING: $PWD/config.local.php already exists."
 		echo "Postfixadmin related environment variables have been ignored."
