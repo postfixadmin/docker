@@ -103,7 +103,7 @@ export POSTFIXADMIN_DB_PASSWORD=$(get_database_env_value "PASSWORD" "")
 DEFAULT_SETUP_PASSWORD="changeme"
 export POSTFIXADMIN_SETUP_PASSWORD=$(get_env_value "POSTFIXADMIN_SETUP_PASSWORD" "${DEFAULT_SETUP_PASSWORD}")
 
-if [[ "$1" == apache2* ]] || [ "$1" == php-fpm ]; then
+if [[ "$1" == apache2* ]] || [ "$1" == php-fpm ] || [ "$1" == frankenphp ]; then
 
 	if [ "${POSTFIXADMIN_SETUP_PASSWORD}" = "${DEFAULT_SETUP_PASSWORD}" ]; then
 		echo >&2 "WARNING: setup.php password not set"
