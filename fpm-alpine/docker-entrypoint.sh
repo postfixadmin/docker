@@ -165,6 +165,8 @@ if [[ "$1" == apache2* ]] || [ "$1" == php-fpm ] || [ "$1" == frankenphp ]; then
 				case "${env_name}" in
 					POSTFIXADMIN_CONFIG_FILE \
 					| POSTFIXADMIN_CONFIGURED \
+					| POSTFIXADMIN_VERSION \
+					| POSTFIXADMIN_SHA512 \
 					| POSTFIXADMIN_DATABASE_* \
 					| POSTFIXADMIN_*_FILE)
 						continue
