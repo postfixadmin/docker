@@ -1,4 +1,4 @@
-FROM php:8.3-%%VARIANT%%
+FROM php:%%PHPVERSION%%-%%VARIANT%%
 LABEL maintainer="David Goodwin <david@codepoets.co.uk> (@DavidGoodwin)"
 
 # docker-entrypoint.sh dependencies
@@ -30,8 +30,8 @@ RUN set -ex; \
 	apk add --no-network --virtual .postfixadmin-phpexts-rundeps $runDeps; \
 	apk del --no-network .build-deps
 
-ARG POSTFIXADMIN_VERSION=4.0.5
-ARG POSTFIXADMIN_SHA512=b9549137e5bb6cf69fe76aef2711092a7e74ec223ee272d0303430b03da16ba8cfe704047f8e07ee5bd1ef6b632cac9ae2c0830271629b193c395197e1f4d93d
+ARG POSTFIXADMIN_VERSION=%%POSTFIXADMIN_VERSION%%
+ARG POSTFIXADMIN_SHA512=%%POSTFIXADMIN_SHA512%%
 
 ENV POSTFIXADMIN_VERSION=$POSTFIXADMIN_VERSION
 ENV POSTFIXADMIN_SHA512=$POSTFIXADMIN_SHA512
