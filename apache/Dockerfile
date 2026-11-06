@@ -1,4 +1,4 @@
-FROM php:8.3-apache
+FROM php:8.4-apache
 LABEL maintainer="David Goodwin <david@codepoets.co.uk> (@DavidGoodwin)"
 
 # docker-entrypoint.sh dependencies
@@ -40,8 +40,8 @@ RUN set -ex; \
 	apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false; \
 	apt-get dist-clean
 
-ARG POSTFIXADMIN_VERSION=4.0.5
-ARG POSTFIXADMIN_SHA512=b9549137e5bb6cf69fe76aef2711092a7e74ec223ee272d0303430b03da16ba8cfe704047f8e07ee5bd1ef6b632cac9ae2c0830271629b193c395197e1f4d93d
+ARG POSTFIXADMIN_VERSION=4.0.6
+ARG POSTFIXADMIN_SHA512=8ad191cbd56f8413a7442a2f6c63e559fd5bfa59424e42960350946eeafed383f7715872ac57a169fbe3269d91067d442efda45eb3e0414cdca4f7da2f4f91fb
 
 ENV POSTFIXADMIN_VERSION $POSTFIXADMIN_VERSION
 ENV POSTFIXADMIN_SHA512 $POSTFIXADMIN_SHA512
